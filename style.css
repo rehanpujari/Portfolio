@@ -1,0 +1,1127 @@
+/* =========================================================
+   Portfolio glass theme + liquid-glass nav bar
+
+   The nav uses the SVG filter #glass-filter (put it once in the
+   HTML body). script.js builds the filter's displacement map from
+   the nav's real size and switches the Transparent / Balanced /
+   Frosted presets.
+   The warp is Chromium-only; other browsers get the same nav with
+   plain blur and no distortion.
+
+   Everything EXCEPT the nav uses the frosted glass of
+   .hero-badge / .btn-secondary (see "SHARED GLASS").
+   ========================================================= */
+
+/* =========================================
+   TOKENS
+   ========================================= */
+
+:root {
+  --bg: #050505;
+
+  --glass-bg: rgba(255, 255, 255, 0.035);
+  --glass-bg-strong: rgba(255, 255, 255, 0.055);
+  --glass-bg-hover: rgba(255, 255, 255, 0.075);
+  --glass-highlight: rgba(255, 255, 255, 0.07);
+
+  --border: rgba(255, 255, 255, 0.11);
+  --border-hover: rgba(255, 255, 255, 0.22);
+
+  --text: #f5f5f5;
+  --text-muted: #8f8f8f;
+
+  --accent: #ffffff;
+  --accent-soft: #bdbdbd;
+
+  --glass-blur: blur(22px) saturate(120%);
+
+  --radius-lg: 20px;
+  --radius-md: 16px;
+  --radius-sm: 9px;
+
+  --shadow-sm: 0 6px 20px rgba(0, 0, 0, 0.18);
+  --shadow-md: 0 14px 35px rgba(0, 0, 0, 0.25);
+
+  /* nav glass look, overridden by the preset buttons (script.js) */
+  --glass-frost: 0.05;
+  --glass-saturation: 1.2;
+  --header-blur: 0px;
+}
+
+[data-theme="light"] {
+  --bg: #f0f2f5;
+
+  --glass-bg: rgba(255, 255, 255, 0.42);
+  --glass-bg-strong: rgba(255, 255, 255, 0.58);
+  --glass-bg-hover: rgba(255, 255, 255, 0.72);
+  --glass-highlight: rgba(255, 255, 255, 0.7);
+
+  --border: rgba(0, 0, 0, 0.09);
+  --border-hover: rgba(0, 0, 0, 0.18);
+
+  --text: #111111;
+  --text-muted: #5f6673;
+
+  --accent: #000000;
+  --accent-soft: #444444;
+
+  --shadow-sm: 0 8px 32px rgba(0, 0, 0, 0.15);
+  --shadow-md: 0 14px 40px rgba(0, 0, 0, 0.18);
+}
+
+/* =========================================
+   RESET
+   ========================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family:
+    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* =========================================
+   BACKGROUND
+   ========================================= */
+
+.glow-bg,
+.glow-blob-1,
+.glow-blob-2 {
+  display: none;
+}
+
+/* =========================================
+   SHARED GLASS (frosted, everything except the nav)
+   Same look as .hero-badge and .btn-secondary
+   ========================================= */
+
+.hero-badge,
+.btn-secondary,
+.card,
+.visual-card,
+.skill-box,
+.contact-item {
+  position: relative;
+  isolation: isolate;
+
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.015)),
+    var(--glass-bg);
+
+  border: 1px solid var(--border);
+
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+
+  box-shadow:
+    var(--shadow-sm),
+    inset 0 1px 0 var(--glass-highlight);
+}
+
+.hero-badge::before,
+.btn-secondary::before,
+.card::before,
+.visual-card::before,
+.skill-box::before,
+.contact-item::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.07), transparent 45%);
+  opacity: 0.65;
+  z-index: -1;
+}
+
+/* =========================================
+   HEADER: liquid glass
+   -----------------------------------------
+   Same recipe as the reference glass surface:
+     background      -> frost tint (black in dark, white in light)
+     backdrop-filter -> SVG lens warp + saturation
+     box-shadow      -> layered inner shadows = bright glass rim
+
+   --glass-frost      tint opacity
+   --glass-saturation colour boost of what shows through
+   --header-blur      extra softness (0 = clear)
+   All three are set by the preset buttons (script.js), which also
+   sets the warp strength.
+   ========================================= */
+
+header {
+  --nav-rgb: 0 0 0;
+
+  position: fixed;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1100px, calc(100% - 40px));
+  min-height: 58px;
+  z-index: 100;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 9px 14px 9px 20px;
+  border-radius: 999px;
+
+  background: rgb(var(--nav-rgb) / var(--glass-frost));
+
+  /* fallback for browsers that reject url() here */
+  -webkit-backdrop-filter: blur(var(--header-blur)) saturate(var(--glass-saturation));
+  backdrop-filter: blur(var(--header-blur)) saturate(var(--glass-saturation));
+  /* Chromium: lens warp through the SVG filter */
+  -webkit-backdrop-filter: url(#glass-filter) blur(var(--header-blur)) saturate(var(--glass-saturation));
+  backdrop-filter: url(#glass-filter) blur(var(--header-blur)) saturate(var(--glass-saturation));
+
+  box-shadow:
+    inset 0 0 2px 1px #ffffff59,
+    inset 0 0 10px 4px #ffffff26,
+    inset 0 4px 16px #11111a0d,
+    inset 0 8px 24px #11111a0d,
+    inset 0 6px 56px #11111a0d,
+    0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="light"] header {
+  --nav-rgb: 255 255 255;
+
+  box-shadow:
+    inset 0 0 2px 1px rgba(255, 255, 255, 0.9),
+    inset 0 0 10px 4px rgba(255, 255, 255, 0.45),
+    inset 0 4px 16px #11111a0d,
+    inset 0 8px 24px #11111a0d,
+    inset 0 6px 56px #11111a0d,
+    0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+/* =========================================
+   BRAND
+   ========================================= */
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  color: var(--text);
+  font-size: 1.05rem;
+  font-weight: 800;
+  line-height: 1;
+  text-decoration: none;
+  letter-spacing: -0.02em;
+}
+
+.brand-dot {
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* =========================================
+   NAVIGATION
+   ========================================= */
+
+header nav {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  list-style: none;
+}
+
+.nav-links li {
+  display: flex;
+  align-items: center;
+}
+
+.nav-links a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+
+.nav-links a:hover {
+  color: var(--text);
+}
+
+/* =========================================
+   THEME TOGGLE
+   ========================================= */
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.theme-toggle:hover {
+  background: var(--glass-bg-hover);
+  border-color: var(--border-hover);
+  transform: translateY(-1px);
+}
+
+/* =========================================
+   MAIN
+   ========================================= */
+
+main {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 115px 20px 40px;
+}
+
+/* =========================================
+   HERO
+   ========================================= */
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 30px;
+  align-items: center;
+  padding: 35px 0;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  margin-bottom: 14px;
+  border-radius: 999px;
+  color: var(--text);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.hero h1 {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  line-height: 1.08;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  margin-bottom: 14px;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #ffffff 0%, #888888 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+[data-theme="light"] .gradient-text {
+  background: linear-gradient(135deg, #000000, #666666);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero p {
+  max-width: 580px;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+}
+
+/* =========================================
+   BUTTONS
+   ========================================= */
+
+.cta-group {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 24px;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: var(--bg);
+  border: 1px solid transparent;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-secondary {
+  color: var(--text);
+}
+
+.btn-secondary:hover {
+  background: var(--glass-bg-hover);
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+}
+
+/* =========================================
+   TERMINAL / VISUAL CARD
+   ========================================= */
+
+.visual-card {
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  box-shadow:
+    var(--shadow-md),
+    inset 0 1px 0 var(--glass-highlight);
+}
+
+.visual-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 15px;
+  background: rgba(255, 255, 255, 0.025);
+  border-bottom: 1px solid var(--border);
+}
+
+.dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.dot-red { background: #ffffff; }
+.dot-yellow { background: #999999; }
+.dot-green { background: #555555; }
+
+.terminal-title {
+  margin-left: auto;
+  font-family: "Roboto Mono", monospace;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.visual-card-body {
+  padding: 20px;
+  font-family: "Roboto Mono", monospace;
+  font-size: 0.88rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.012), transparent);
+}
+
+.code-line {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.code-prompt { color: var(--accent); }
+.code-key { color: #999999; }
+.code-val,
+.code-val-green { color: var(--text); }
+.text-muted { color: var(--text-muted); }
+
+/* =========================================
+   SECTIONS
+   ========================================= */
+
+.section {
+  padding: 45px 0;
+}
+
+.section-header {
+  margin-bottom: 22px;
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.section-desc {
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+
+/* =========================================
+   CARDS
+   ========================================= */
+
+.card {
+  padding: 20px;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  background: var(--glass-bg-hover);
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-md);
+}
+
+.about-text {
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  line-height: 1.65;
+}
+
+/* =========================================
+   EDUCATION
+   ========================================= */
+
+.edu-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.edu-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.edu-icon-wrap {
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  background: var(--glass-bg-strong);
+  border: 1px solid var(--border);
+  color: var(--accent);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+.edu-content h3 {
+  font-size: 1.15rem;
+  margin-bottom: 3px;
+}
+
+.edu-meta {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 5px;
+}
+
+.edu-desc {
+  color: var(--text-muted);
+  font-size: 0.94rem;
+  line-height: 1.5;
+}
+
+.gpa-pill {
+  display: inline-block;
+  padding: 2px 9px;
+  margin-left: 7px;
+  border-radius: 999px;
+  background: var(--glass-bg-strong);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 0.78rem;
+  font-weight: 700;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+/* =========================================
+   SKILLS
+   ========================================= */
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.skill-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+  text-align: center;
+  border-radius: var(--radius-md);
+  transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+}
+
+.skill-box:hover {
+  transform: translateY(-3px);
+  background: var(--glass-bg-hover);
+  border-color: var(--border-hover);
+}
+
+.skill-icon {
+  width: 36px;
+  height: 36px;
+  color: var(--accent);
+}
+
+.skill-name {
+  font-size: 0.94rem;
+  font-weight: 700;
+}
+
+/* =========================================
+   CERTIFICATIONS
+   ========================================= */
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.cert-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.badge-visual {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.cisco-logo {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ffffff, #777777);
+  color: #000000;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.cert-title { font-size: 1.15rem; }
+
+.cert-issuer {
+  font-size: 0.84rem;
+  color: var(--text-muted);
+}
+
+.cert-desc {
+  color: var(--text-muted);
+  font-size: 0.94rem;
+  line-height: 1.5;
+}
+
+.fit-btn { width: fit-content; }
+
+/* =========================================
+   CONTACT
+   ========================================= */
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: var(--text);
+  transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+}
+
+.contact-item:hover {
+  transform: translateY(-3px);
+  background: var(--glass-bg-hover);
+  border-color: var(--border-hover);
+}
+
+.contact-icon {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--glass-bg-strong);
+  border: 1px solid var(--border);
+  color: var(--accent);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+.contact-label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.contact-val {
+  font-size: 0.94rem;
+  font-weight: 700;
+}
+
+/* =========================================
+   FOOTER
+   ========================================= */
+
+footer {
+  margin-top: 25px;
+  padding: 24px 20px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  border-top: 1px solid var(--border);
+  background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.012));
+}
+
+/* =========================================
+   ABOUT, SUBSECTIONS, FORM
+   ========================================= */
+
+.about-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.about-photo {
+  width: 150px;
+  height: auto;
+  flex-shrink: 0;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+}
+
+.about-card .about-text + .about-text {
+  margin-top: 14px;
+}
+
+.subsection {
+  margin-top: 45px;
+}
+
+.card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 6px;
+}
+
+.card-text {
+  color: var(--text-muted);
+  font-size: 0.94rem;
+  line-height: 1.5;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 640px;
+}
+
+.card.contact-form:hover {
+  transform: none;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field label {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  padding: 11px 14px;
+  border-radius: var(--radius-md);
+  background: var(--glass-bg-strong);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.94rem;
+  resize: vertical;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  transition: border-color 0.2s ease;
+}
+
+.field input:hover,
+.field textarea:hover {
+  border-color: var(--border-hover);
+}
+
+.field input:focus-visible,
+.field textarea:focus-visible {
+  outline: 2px solid var(--accent-soft);
+  outline-offset: 2px;
+}
+
+.field textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.contact-form .btn {
+  align-self: flex-start;
+  font-family: inherit;
+}
+
+/* =========================================
+   GLASS PRESET BUTTONS
+   Transparent / Balanced / Frosted (values live in script.js)
+   ========================================= */
+
+.glass-control {
+  position: fixed;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  z-index: 90;
+
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  padding: 8px 8px 8px 20px;
+  border-radius: 999px;
+
+  background: var(--glass-bg-strong);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md), inset 0 1px 0 var(--glass-highlight);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+}
+
+.glass-control-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.glass-presets {
+  display: flex;
+  gap: 4px;
+}
+
+.glass-preset {
+  height: 36px;
+  padding: 0 16px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.glass-preset:hover {
+  background: var(--glass-bg-hover);
+  color: var(--text);
+}
+
+.glass-preset[aria-pressed="true"] {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.glass-preset:focus-visible {
+  outline: 2px solid var(--accent-soft);
+  outline-offset: 2px;
+}
+
+@media (max-width: 480px) {
+  .glass-control {
+    width: calc(100% - 24px);
+    bottom: 12px;
+    padding: 6px;
+  }
+
+  .glass-control-label { display: none; }
+
+  .glass-presets { flex: 1; }
+
+  .glass-preset {
+    flex: 1;
+    padding: 0 6px;
+    font-size: 0.78rem;
+  }
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+
+@media (max-width: 868px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 25px;
+    padding: 25px 0;
+  }
+
+  header {
+    width: calc(100% - 24px);
+    top: 12px;
+    padding: 9px 12px 9px 16px;
+  }
+
+  header nav,
+  .nav-links {
+    display: none;
+  }
+
+  .brand { font-size: 1rem; }
+
+  main { padding: 105px 16px 35px; }
+
+  .section { padding: 35px 0; }
+
+  .section-header { margin-bottom: 18px; }
+}
+
+@media (max-width: 480px) {
+  header { min-height: 54px; }
+
+  .theme-toggle {
+    height: 32px;
+    padding: 0 10px;
+    font-size: 0.74rem;
+  }
+
+  .hero h1 {
+    font-size: 2.3rem;
+    margin-bottom: 10px;
+  }
+
+  .hero p { margin-bottom: 16px; }
+
+  .hero-grid { padding: 15px 0; }
+
+  .section { padding: 30px 0; }
+
+  .card { padding: 18px; }
+
+  .edu-card { gap: 12px; }
+
+  .edu-icon-wrap {
+    width: 42px;
+    height: 42px;
+  }
+
+  .grid-2 { grid-template-columns: 1fr; }
+
+  footer {
+    margin-top: 20px;
+    padding: 20px 20px 20px;
+  }
+
+  .about-card { flex-direction: column; }
+}
+
+/* =========================================
+   REDUCED MOTION
+   ========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* =========================================
+   NAV EXTRAS (unchanged): header buttons + dropdown
+   ========================================= */
+
+:root {
+  --nav-rgb: 0 0 0;
+  --glass-rim:
+    inset 0 0 2px 1px #ffffff59,
+    inset 0 0 10px 4px #ffffff26,
+    inset 0 4px 16px #11111a0d,
+    inset 0 8px 24px #11111a0d,
+    inset 0 6px 56px #11111a0d;
+}
+
+[data-theme="light"] {
+  --nav-rgb: 255 255 255;
+  --glass-rim:
+    inset 0 0 2px 1px rgba(255, 255, 255, 0.9),
+    inset 0 0 10px 4px rgba(255, 255, 255, 0.45),
+    inset 0 4px 16px #11111a0d,
+    inset 0 8px 24px #11111a0d,
+    inset 0 6px 56px #11111a0d;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.glass-menu { position: relative; }
+
+.glass-dropdown {
+  position: absolute;
+  top: calc(100% + 14px);
+  right: 0;
+  min-width: 170px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-radius: 18px;
+  background: rgba(18, 18, 18, 0.94);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-6px);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+}
+
+[data-theme="light"] .glass-dropdown { background: rgba(255, 255, 255, 0.95); }
+
+.glass-dropdown.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.glass-dropdown .glass-preset {
+  width: 100%;
+  height: 38px;
+  padding: 0 14px;
+  flex: none;
+  text-align: left;
+  border-radius: 12px;
+  font-size: 0.82rem;
+}
+
+#glassMenuBtn[aria-expanded="true"] { border-color: var(--border-hover); }
+
+@media (max-width: 480px) {
+  #glassModeText { display: none; }
+}
+
+/* =========================================
+   BACKGROUND IMAGE
+   ========================================= */
+
+/* Dark theme image */
+:root {
+  --bg-overlay: rgba(0, 0, 0, 0.45);
+  --bg-image: url("background-dark.jpg");
+}
+
+/* Light theme image */
+[data-theme="light"] {
+  --bg-overlay: rgba(255, 255, 255, 0.35);
+  --bg-image: url("background-light.jpg");
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(var(--bg-overlay), var(--bg-overlay)),
+    var(--bg-image) center / cover no-repeat;
+}

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rehan Pujari — IT Student & Tech Explorer</title>
+
+<link rel="preload" as="image" href="background-light.jpg">
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="glass-filter" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+    <feImage id="glass-map" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="map"/>
+    <feDisplacementMap id="glass-red" in="SourceGraphic" in2="map" scale="-75" xChannelSelector="R" yChannelSelector="B" result="dispRed"/>
+    <feColorMatrix in="dispRed" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="red"/>
+    <feDisplacementMap id="glass-green" in="SourceGraphic" in2="map" scale="-70" xChannelSelector="R" yChannelSelector="B" result="dispGreen"/>
+    <feColorMatrix in="dispGreen" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="green"/>
+    <feDisplacementMap id="glass-blue" in="SourceGraphic" in2="map" scale="-65" xChannelSelector="R" yChannelSelector="B" result="dispBlue"/>
+    <feColorMatrix in="dispBlue" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="blue"/>
+    <feBlend in="red" in2="green" mode="screen" result="rg"/>
+    <feBlend in="rg" in2="blue" mode="screen" result="output"/>
+    <feGaussianBlur in="output" stdDeviation="0.7"/>
+  </filter>
+</svg>
+
+<header>
+    <a href="#" class="brand">Rehan Pujari</a>
+
+    <nav>
+        <ul class="nav-links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#education">Education</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#certifications">Certifications</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <div class="header-actions">
+        <div class="glass-menu">
+            <button class="theme-toggle" id="glassMenuBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="glassDropdown">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2.7s7 7.3 7 12.3a7 7 0 0 1-14 0c0-5 7-12.3 7-12.3z"></path>
+                </svg>
+                <span id="glassModeText">Transparency</span>
+            </button>
+
+            <div class="glass-dropdown" id="glassDropdown" role="group" aria-label="Glass transparency">
+                <button type="button" class="glass-preset" data-preset="transparent" aria-pressed="true">Transparent</button>
+                <button type="button" class="glass-preset" data-preset="balanced" aria-pressed="false">Balanced</button>
+                <button type="button" class="glass-preset" data-preset="frosted" aria-pressed="false">Frosted</button>
+            </div>
+        </div>
+
+        <button class="theme-toggle" id="themeToggleBtn" type="button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <span id="themeModeText">Theme</span>
+        </button>
+    </div>
+</header>
+
+<main>
+    <section class="hero-grid">
+        <div>
+            <div class="hero-badge">Kathmandu, Nepal &bull; Open to Opportunities</div>
+            <h1>Hi, I'm <span class="gradient-text">Rehan Pujari</span></h1>
+            <p>Information Technology student focused on systems engineering, Linux environments, networking, and exploring Artificial Intelligence and Robotics.</p>
+
+            <div class="cta-group">
+                <a href="#contact" class="btn btn-primary">Connect With Me</a>
+                <a href="#certifications" class="btn btn-secondary">View Credentials</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="section">
+        <div class="section-header">
+            <h2 class="section-title">About Me</h2>
+            <p class="section-desc">Practical systems knowledge paired with formal IT academics.</p>
+        </div>
+
+        <div class="card">
+            <p class="about-text">I’m Rehan, a curious BIT student who enjoys understanding how things work and solving problems along the way. I’m interested in software, automation, networking, and technology in general, and I enjoy exploring how different systems connect and work together. I like learning by experimenting, building things, and figuring out solutions when something doesn’t work. I’m still discovering which area of IT I want to specialize in, but I’m always excited to learn something new.</p>
+        </div>
+    </section>
+
+    <section id="education" class="section">
+        <div class="section-header">
+            <h2 class="section-title">Education</h2>
+            <p class="section-desc">My academic pathway and qualification history.</p>
+        </div>
+
+        <div class="edu-timeline">
+            <div class="card edu-card">
+                <div class="edu-icon-wrap">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 10v6"></path>
+                        <path d="M2 10l10-5 10 5-10 5z"></path>
+                        <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h3>Bachelor's in Information Technology (BIT)</h3>
+                    <div class="edu-meta">2025 – Present &bull; Ongoing</div>
+                    <p class="edu-desc">Model Institute of Technology (MIT) — Affiliated with International American University (IAU).</p>
+                </div>
+            </div>
+
+            <div class="card edu-card">
+                <div class="edu-icon-wrap">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h3>+2 Science / Management (NEB) <span class="gpa-pill">GPA 3.63</span></h3>
+                    <div class="edu-meta">2022 – 2024</div>
+                    <p class="edu-desc">Global College of Management, Baneshwor, Kathmandu.</p>
+                </div>
+            </div>
+
+            <div class="card edu-card">
+                <div class="edu-icon-wrap">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                        <path d="M2 17l10 5 10-5"></path>
+                        <path d="M2 12l10 5 10-5"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h3>Secondary Education Examination (SEE) <span class="gpa-pill">GPA 3.33</span></h3>
+                    <div class="edu-meta">2021</div>
+                    <p class="edu-desc">Himalayan Boarding School, Budhanilkantha, Kathmandu.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills" class="section">
+        <div class="section-header">
+            <h2 class="section-title">Technical Expertise</h2>
+            <p class="section-desc">Operating systems, database tools, and languages I work with.</p>
+        </div>
+
+        <div class="skills-grid">
+            <div class="skill-box">
+                <svg class="skill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+                    <line x1="8" y1="21" x2="16" y2="21"></line>
+                    <line x1="12" y1="17" x2="12" y2="21"></line>
+                </svg>
+                <span class="skill-name">Linux / Unix</span>
+            </div>
+
+            <div class="skill-box">
+                <svg class="skill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="16 18 22 12 16 6"></polyline>
+                    <polyline points="8 6 2 12 8 18"></polyline>
+                </svg>
+                <span class="skill-name">Python</span>
+            </div>
+
+            <div class="skill-box">
+                <svg class="skill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
+                </svg>
+                <span class="skill-name">C Language</span>
+            </div>
+
+            <div class="skill-box">
+                <svg class="skill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                </svg>
+                <span class="skill-name">Oracle / SQL</span>
+            </div>
+
+            <div class="skill-box">
+                <svg class="skill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                </svg>
+                <span class="skill-name">HTML & JS</span>
+            </div>
+
+            <div class="skill-box">
+                <svg class="skill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+                <span class="skill-name">Networking & AI</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="certifications" class="section">
+        <div class="section-header">
+            <h2 class="section-title">Certifications</h2>
+            <p class="section-desc">Verified industry credentials.</p>
+        </div>
+
+        <div class="grid-2">
+            <div class="card cert-card">
+                <div class="badge-visual">
+                    <div class="cisco-logo">CISCO</div>
+                    <div>
+                        <h3 class="cert-title">Introduction to Cybersecurity</h3>
+                        <p class="cert-issuer">Cisco Networking Academy</p>
+                    </div>
+                </div>
+
+                <a href="https://www.credly.com/badges/6266fad9-cd46-4c2a-a27e67b66d8feb46" target="_blank" rel="noopener noreferrer" class="btn btn-secondary fit-btn">Verify Badge on Credly &rarr;</a>
+            </div>
+
+            <div class="card cert-card">
+                <div class="badge-visual">
+                    <div class="cisco-logo">AWS</div>
+                    <div>
+                        <h3 class="cert-title">AWS Academy Graduate - Cloud Foundations - Training Badge</h3>
+                        <p class="cert-issuer">Amazon Web Services Training and Certification</p>
+                    </div>
+                </div>
+
+                <a href="https://www.credly.com/badges/9d4d325f-9110-45ac-b41d-3db9865ff93c/public_url" target="_blank" rel="noopener noreferrer" class="btn btn-secondary fit-btn">Verify Badge on Credly &rarr;</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="section">
+        <div class="section-header">
+            <h2 class="section-title">Get In Touch</h2>
+            <p class="section-desc">Direct communication channels.</p>
+        </div>
+
+        <div class="contact-grid">
+            <a href="mailto:rehanwith@gmail.com" class="contact-item">
+                <div class="contact-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                </div>
+                <div>
+                    <div class="contact-label">Email</div>
+                    <div class="contact-val">rehanwith@gmail.com</div>
+                </div>
+            </a>
+
+            <a href="tel:+9779761858633" class="contact-item">
+                <div class="contact-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <div class="contact-label">Phone / WhatsApp</div>
+                    <div class="contact-val">+977 9818203974</div>
+                </div>
+            </a>
+
+            <div class="contact-item">
+                <div class="contact-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                </div>
+                <div>
+                    <div class="contact-label">Location</div>
+                    <div class="contact-val">Budhanilkantha, Kathmandu</div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <p>&copy; 2026 Rehan Pujari &bull; Kathmandu, Nepal</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
